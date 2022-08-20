@@ -36,9 +36,9 @@ async function getTrendingMoviesPreview() {
         //Agregando las imágenes de las películas en su contenedor 
         movieContainer.appendChild(movieImg);
         
-        // Agregando las películas en el contenedor principal de la sección
-        const trendingPreviewMoviesContainer = document.querySelector('#trendingPreview .trendingPreview-movieList');
-        trendingPreviewMoviesContainer.appendChild(movieContainer);
+        //// Agregando las películas en el contenedor principal de la sección
+        const trendingMoviesPreviewList = document.querySelector('#trendingPreview .trendingPreview-movieList');
+        trendingMoviesPreviewList.appendChild(movieContainer);
     });
 
 
@@ -67,7 +67,7 @@ async function getCategoriesPreview() {
         //Agregando cada categoría en el html
         categoryTitle.appendChild(categoryTitleText);
         categoryContainer.appendChild(categoryTitle);
-        const previewCategoriesContainer = document.querySelector('#categoriesPreview .categoriesPreview-list');
-        previewCategoriesContainer.appendChild(categoryContainer);
+        const categoriesPreviewList = document.querySelector('#categoriesPreview .categoriesPreview-list');
+        categoriesPreviewList.appendChild(categoryContainer);
     })
 }
