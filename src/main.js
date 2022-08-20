@@ -44,7 +44,6 @@ async function getTrendingMoviesPreview() {
 
 }
 
-
 async function getCategoriesPreview() {
     /* con Fetch
     const response = await fetch('https://api.themoviedb.org/3/genre/movie/list?api_key=' + API_KEY);
@@ -72,8 +71,3 @@ async function getCategoriesPreview() {
         previewCategoriesContainer.appendChild(categoryContainer);
     })
 }
-
-
-
-getTrendingMoviesPreview();
-getCategoriesPreview();
