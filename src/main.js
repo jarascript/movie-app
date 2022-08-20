@@ -17,8 +17,9 @@ async function getTrendingMoviesPreview() {
 
     //Con Axios
     const { data } = await api('/trending/movie/day');
-
     const movies = data.results;
+
+    trendingMoviesPreviewList.innerHTML = '';
     
     movies.forEach(movie => {     
         //creando elementos por cada iteración del arreglo obtenido con las películas
@@ -37,7 +38,7 @@ async function getTrendingMoviesPreview() {
         movieContainer.appendChild(movieImg);
         
         //// Agregando las películas en el contenedor principal de la sección
-        const trendingMoviesPreviewList = document.querySelector('#trendingPreview .trendingPreview-movieList');
+        //const trendingMoviesPreviewList = document.querySelector('#trendingPreview .trendingPreview-movieList');
         trendingMoviesPreviewList.appendChild(movieContainer);
     });
 
@@ -52,8 +53,10 @@ async function getCategoriesPreview() {
     
     //con Axios
     const { data } = await api('genre/movie/list');
-
     const categories = data.genres;
+
+    categoriesPreviewList.innerHTML = '';
+
     categories.forEach(category => {
         //Creando los elementos por cada cateogíra del arreglo;
         const categoryContainer = document.createElement('div');
@@ -67,7 +70,8 @@ async function getCategoriesPreview() {
         //Agregando cada categoría en el html
         categoryTitle.appendChild(categoryTitleText);
         categoryContainer.appendChild(categoryTitle);
-        const categoriesPreviewList = document.querySelector('#categoriesPreview .categoriesPreview-list');
+        //const categoriesPreviewList = document.querySelector('#categoriesPreview .categoriesPreview-list');
+        
         categoriesPreviewList.appendChild(categoryContainer);
     })
 }
