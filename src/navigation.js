@@ -34,6 +34,8 @@ function navigator() {
     location.hash.startsWith('#category=') ? categoriesPage() :
     location.hash.startsWith('#movie=') ? movieDetailsPage() :
     homePage();
+
+    document.body.scrollTop = 0;
 }
 
 function homePage() {
@@ -71,6 +73,14 @@ function categoriesPage() {
     categoriesPreviewSection.classList.add('inactive');
     genericListSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
+
+    //convertimos el string de la url y lo convertimos en un array para obtener el id
+    const [, categoryData] = location.hash.split('=') // ['category', 'id-name']
+    const [categoryId, categoryName] = categoryData.split('-'); 
+
+    headerCategoryTitle.innerHTML = categoryName.replaceAll('%20', ' '); //para quitar los espacios
+
+    getMoviesByCategory(categoryId);
 
 }
 
