@@ -100,3 +100,29 @@ async function getMoviesByCategory(id) {
 
     createMovies(movies, genericListSection);
 }
+
+async function getMoviesBySearch(query) {
+    //Con Axios
+    const { data } = await api('search/movie', {
+        params: {
+            query: query
+        }
+    });
+    const movies = data.results;
+
+    createMovies(movies, genericListSection);
+}
+
+async function getTrendingMovies() {
+    /* Con Fetch
+    const res = await fetch('https://api.themoviedb.org/3/trending/movie/day?api_key=' + API_KEY);
+    const data = await res.json();
+    */
+
+    //Con Axios
+    const { data } = await api('/trending/movie/day');
+    const movies = data.results;
+
+    createMovies(movies, genericListSection);
+
+}

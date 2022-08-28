@@ -1,5 +1,6 @@
 searchFormBtn.addEventListener('click', () => {
-   location.hash='search='; 
+
+   location.hash='search=' + searchFormInput.value; 
 });
 
 trendingBtn.addEventListener('click', () => {
@@ -7,7 +8,8 @@ trendingBtn.addEventListener('click', () => {
 })
 
 arrowBtn.addEventListener('click', () => {
-    location.hash='home';
+    history.back();
+    //location.hash='home';
 })
 
 window.addEventListener('DOMContentLoaded', navigator, false);
@@ -102,14 +104,14 @@ function movieDetailsPage() {
 }
 
 function searchPage() {
-    console.log('Categories!');
+    console.log('Buscando Película!');
 
     headerSection.classList.remove('header-container--long');
     headerSection.style.background = '';
     arrowBtn.classList.remove('inactive');
     arrowBtn.classList.remove('header-arrow--white');
     headerTitle.classList.add('inactive');
-    headerCategoryTitle.classList.remove('inactive');
+    headerCategoryTitle.classList.add('inactive');
 
     searchForm.classList.remove('inactive');
 
@@ -117,6 +119,12 @@ function searchPage() {
     categoriesPreviewSection.classList.add('inactive');
     genericListSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
+
+    //convertimos el string de la url y lo convertimos en un array para obtener la búsqueda
+    const [, query] = location.hash.split('=') // ['inputSearch', 'query']
+    query_final = query.replaceAll('%20', ' '); //para quitar los espacios
+    console.log(query_final);
+    getMoviesBySearch(query_final);
 }
 
 function trendsPage() {
@@ -135,5 +143,8 @@ function trendsPage() {
     categoriesPreviewSection.classList.add('inactive');
     genericListSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
+
+    headerCategoryTitle.innerHTML = 'Tendencias'; 
+    getTrendingMovies();
 }
 
