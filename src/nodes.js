@@ -26,6 +26,7 @@ const searchFormBtn = $('#searchBtn');
 
 const trendingBtn = $('.trendingPreview-btn');
 
+    // Movie Detail
 const movieDetailTitle = $('.movieDetail-title');
 const movieDetailDescription = $('.movieDetail-description');
 const movieDetailScore = $('.movieDetail-score');

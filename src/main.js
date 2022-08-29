@@ -17,6 +17,9 @@ function createMovies(movies, container){
         //creando elementos por cada iteración del arreglo obtenido con las películas
         const movieContainer = document.createElement('div');
         movieContainer.classList.add('movie-container');
+        movieContainer.addEventListener('click', () => {
+            location.hash = 'movie='+movie.id;
+        });
 
         const movieImg = document.createElement('img');
         movieImg.classList.add('movie-img');
@@ -125,4 +128,37 @@ async function getTrendingMovies() {
 
     createMovies(movies, genericListSection);
 
+}
+
+async function getMovieById(id) {
+    //Con Axios
+    headerSection.style.background = '#333';
+    const { data } = await api('movie/' + id);
+    const movie = data;
+    console.log(movie);
+    movieImgUrl = 'https://image.tmdb.org/t/p/w300'+ movie.poster_path;
+    headerSection.style.background = `
+    linear-gradient(
+        180deg, 
+        rgba(0, 0, 0, 0.35) 19.27%, 
+        rgba(0, 0, 0, 0) 29.17%
+        ),
+    url(${movieImgUrl})`;
+
+    movieDetailTitle.textContent = movie.title; 
+    movieDetailDescription.textContent = movie.overview;
+    vote_average = movie.vote_average.toFixed(2); //redondeamos los votos a 2 decimales con toFixed()
+    movieDetailScore.textContent = vote_average;
+
+    createCategories(movie.genres, movieDetailCategoriesList);
+
+    getRelatedMoviesById(id);
+}
+
+async function getRelatedMoviesById(id) {
+    //Con Axios
+    const { data } = await api('movie/' + id + '/similar');
+    const relatedMovies = data.results;
+    createMovies(relatedMovies, relatedMoviesContainer);
+    relatedMoviesContainer.scrollTo(0, 0);
 }

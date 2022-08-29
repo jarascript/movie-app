@@ -1,6 +1,10 @@
 searchFormBtn.addEventListener('click', () => {
-
-   location.hash='search=' + searchFormInput.value; 
+    if(searchFormInput.value == '') {
+        alert("Debes ingresar un nombre de película para buscar");
+       } 
+    else {
+        location.hash='search=' + searchFormInput.value; 
+    }
 });
 
 trendingBtn.addEventListener('click', () => {
@@ -101,6 +105,11 @@ function movieDetailsPage() {
     categoriesPreviewSection.classList.add('inactive');
     genericListSection.classList.add('inactive');
     movieDetailSection.classList.remove('inactive');
+
+    //convertimos el string de la url y lo convertimos en un array para obtener la búsqueda
+    const [, movieId] = location.hash.split('=') // ['#movie=', 'movieId']
+    console.log(movieId);
+    getMovieById(movieId);
 }
 
 function searchPage() {
