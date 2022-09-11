@@ -11,7 +11,19 @@ const api = axios.create({
 
 // Utils
 
-function createMovies(movies, container){
+//Agregando películas con un lazy loader
+const lazyLoader = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        //console.log(entry.target);
+        console.log({entry});
+        if (entry.isIntersecting) {
+            const url = entry.target.getAttribute('data-img');
+            entry.target.setAttribute('src', url);
+        }
+    });
+});
+
+function createMovies(movies, container, lazyLoad = false){
     container.innerHTML = '';
     movies.forEach(movie => {     
         //creando elementos por cada iteración del arreglo obtenido con las películas
@@ -25,10 +37,19 @@ function createMovies(movies, container){
         movieImg.classList.add('movie-img');
         movieImg.setAttribute('alt', movie.title);
         // URL Base para obtener imágenes de la API https://image.tmdb.org/t/p/w300
-        movieImg.setAttribute('src', 'https://image.tmdb.org/t/p/w300'+ movie.poster_path);
+        movieImg.setAttribute(
+            lazyLoad ? 'data-img' : 'src', 
+            'https://image.tmdb.org/t/p/w300'+ movie.poster_path);
+
+        movieImg.addEventListener('error', () => {
+            const title = movieImg.getAttribute('alt');
+            movieImg.setAttribute('src', `https://dummyimage.com/300x450/f0f0f0/404040.png&text=${title}`);
+        });
         
         //Agregando películas en el html
-        
+        if (lazyLoad) { 
+            lazyLoader.observe(movieImg);
+        }
         //Agregando las imágenes de las películas en su contenedor 
         movieContainer.appendChild(movieImg);
         
@@ -75,7 +96,7 @@ async function getTrendingMoviesPreview() {
     const { data } = await api('/trending/movie/day');
     const movies = data.results;
 
-    createMovies(movies, trendingMoviesPreviewList);
+    createMovies(movies, trendingMoviesPreviewList, true);
 
 }
 
@@ -101,7 +122,7 @@ async function getMoviesByCategory(id) {
     });
     const movies = data.results;
 
-    createMovies(movies, genericListSection);
+    createMovies(movies, genericListSection, true);
 }
 
 async function getMoviesBySearch(query) {
@@ -113,7 +134,7 @@ async function getMoviesBySearch(query) {
     });
     const movies = data.results;
 
-    createMovies(movies, genericListSection);
+    createMovies(movies, genericListSection, true);
 }
 
 async function getTrendingMovies() {
@@ -126,7 +147,7 @@ async function getTrendingMovies() {
     const { data } = await api('/trending/movie/day');
     const movies = data.results;
 
-    createMovies(movies, genericListSection);
+    createMovies(movies, genericListSection, true);
 
 }
 
@@ -159,6 +180,6 @@ async function getRelatedMoviesById(id) {
     //Con Axios
     const { data } = await api('movie/' + id + '/similar');
     const relatedMovies = data.results;
-    createMovies(relatedMovies, relatedMoviesContainer);
+    createMovies(relatedMovies, relatedMoviesContainer, true);
     relatedMoviesContainer.scrollTo(0, 0);
 }
