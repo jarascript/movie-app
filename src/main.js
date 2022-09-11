@@ -15,7 +15,7 @@ const api = axios.create({
 const lazyLoader = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         //console.log(entry.target);
-        console.log({entry});
+        //console.log({entry});
         if (entry.isIntersecting) {
             const url = entry.target.getAttribute('data-img');
             entry.target.setAttribute('src', url);
@@ -23,8 +23,18 @@ const lazyLoader = new IntersectionObserver((entries) => {
     });
 });
 
-function createMovies(movies, container, lazyLoad = false){
-    container.innerHTML = '';
+function createMovies(
+    movies,
+    container,
+    { 
+        lazyLoad = false,
+        clean = true
+    }= {},
+    ){
+        if (clean) {
+        container.innerHTML = '';
+    }  
+    
     movies.forEach(movie => {     
         //creando elementos por cada iteración del arreglo obtenido con las películas
         const movieContainer = document.createElement('div');
@@ -147,8 +157,32 @@ async function getTrendingMovies() {
     const { data } = await api('/trending/movie/day');
     const movies = data.results;
 
-    createMovies(movies, genericListSection, true);
+    createMovies(movies, genericListSection, {lazyLoad: true, clean: true});
 
+    const btnLoadMore = document.createElement('button');
+    btnLoadMore.innerHTML = 'Cargar más';
+    btnLoadMore.addEventListener('click', getPaginatedTrendingMovies);
+    genericListSection.appendChild(btnLoadMore);
+
+}
+
+let page = 1;
+
+async function getPaginatedTrendingMovies() {
+    page++;
+    const { data } = await api('/trending/movie/day', {
+        params: {
+            page,
+        },
+    });
+    const movies = data.results;
+
+    createMovies(movies, genericListSection, {lazyLoad: true, clean: false});
+
+    const btnLoadMore = document.createElement('button');
+    btnLoadMore.innerHTML = 'Cargar más';
+    btnLoadMore.addEventListener('click', getPaginatedTrendingMovies);
+    genericListSection.appendChild(btnLoadMore);
 }
 
 async function getMovieById(id) {
