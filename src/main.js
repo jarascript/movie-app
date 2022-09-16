@@ -96,7 +96,8 @@ function createMovies(
         movieBtn.classList.add('movie-btn');
         //verificamos si ya está clickeado en favoritos para mantener la clase
         likedMovieList()[movie.id] && movieBtn.classList.add('movie-btn--liked'); 
-        movieBtn.addEventListener('click', () => {
+        movieBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             movieBtn.classList.toggle('movie-btn--liked');    
             likeMovie(movie);
         });

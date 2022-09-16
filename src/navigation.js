@@ -121,6 +121,7 @@ function movieDetailsPage() {
 
     trendingPreviewSection.classList.add('inactive');
     categoriesPreviewSection.classList.add('inactive');
+    likedMoviesSection.classList.add('inactive');
     genericListSection.classList.add('inactive');
     movieDetailSection.classList.remove('inactive');
 
