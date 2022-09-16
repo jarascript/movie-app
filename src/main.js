@@ -1,3 +1,4 @@
+//Data
 const api = axios.create({
     baseURL: 'https://api.themoviedb.org/3',
     headers: {
@@ -7,6 +8,39 @@ const api = axios.create({
         'api_key': API_KEY,
     } 
 });
+
+function likedMovieList() {
+    const item = JSON.parse(localStorage.getItem('liked_movies'));
+    let movies;
+
+    if (item) {
+        movies = item;
+    } else {
+        movies = {};
+    }
+
+    return movies;
+}
+
+function likeMovie(movie) {
+    //movie.id
+    const likedMovies = likedMovieList();
+    console.log(likedMovieList());
+
+    if (likedMovies[movie.id]) {
+         //removerla de localstorage
+         likedMovies[movie.id] = undefined;
+    } else {
+         //agregar peli a localstorage
+         likedMovies[movie.id] = movie;
+     }
+
+     localStorage.setItem('liked_movies', JSON.stringify(likedMovies));
+
+     if (location.hash == '') {
+        homePage();
+     }
+}
 
 
 // Utils
@@ -39,9 +73,9 @@ function createMovies(
         //creando elementos por cada iteración del arreglo obtenido con las películas
         const movieContainer = document.createElement('div');
         movieContainer.classList.add('movie-container');
-        movieContainer.addEventListener('click', () => {
-            location.hash = 'movie='+movie.id;
-        });
+        // movieContainer.addEventListener('click', () => {
+        //     location.hash = 'movie='+movie.id;
+        // });
 
         const movieImg = document.createElement('img');
         movieImg.classList.add('movie-img');
@@ -55,6 +89,17 @@ function createMovies(
             const title = movieImg.getAttribute('alt');
             movieImg.setAttribute('src', `https://dummyimage.com/300x450/f0f0f0/404040.png&text=${title}`);
         });
+
+        //Botón favoritos
+        const movieBtn = document.createElement('button');
+        movieBtn.classList.add('movie-btn');
+        //verificamos si ya está clickeado en favoritos para mantener la clase
+        likedMovieList()[movie.id] && movieBtn.classList.add('movie-btn--liked'); 
+        movieBtn.addEventListener('click', () => {
+            movieBtn.classList.toggle('movie-btn--liked');    
+            likeMovie(movie);
+        });
+
         
         //Agregando películas en el html
         if (lazyLoad) { 
@@ -62,6 +107,7 @@ function createMovies(
         }
         //Agregando las imágenes de las películas en su contenedor 
         movieContainer.appendChild(movieImg);
+        movieContainer.appendChild(movieBtn);
         
         //// Agregando las películas en el contenedor principal de la sección
         //const trendingMoviesPreviewList = document.querySelector('#trendingPreview .trendingPreview-movieList');
@@ -269,3 +315,12 @@ async function getRelatedMoviesById(id) {
     relatedMoviesContainer.scrollTo(0, 0);
 }
 
+function getLikedMovies() {
+    const likedMovies = likedMovieList();
+    // {keys: 'values'}
+    const moviesArray = Object.values(likedMovies);
+    
+    createMovies(moviesArray, likedMoviesListArticle, {lazyLoad: true, clean:true});
+
+    console.log(likedMovies);
+}
