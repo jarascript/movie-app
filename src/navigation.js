@@ -1,3 +1,7 @@
+let maxPage;
+let page = 1;
+let infiniteScroll;
+
 searchFormBtn.addEventListener('click', () => {
     if(searchFormInput.value == '') {
         alert("Debes ingresar un nombre de película para buscar");
@@ -18,8 +22,14 @@ arrowBtn.addEventListener('click', () => {
 
 window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
+window.addEventListener('scroll', infiniteScroll, {passive : false});
 
 function navigator() {
+    if (infiniteScroll){
+        window.removeEventListener('scroll', infiniteScroll, {passive : false});
+        infiniteScroll = undefined;
+    }
+    
     console.log({location});
 /*
     if (location.hash.startsWith('#trends')) {
@@ -42,6 +52,10 @@ function navigator() {
     homePage();
 
     document.body.scrollTop = 0;
+
+    if (infiniteScroll) {
+        window.addEventListener('scroll', infiniteScroll, {passive : false});
+    }
 }
 
 function homePage() {
@@ -88,6 +102,7 @@ function categoriesPage() {
 
     getMoviesByCategory(categoryId);
 
+    infiniteScroll = getPaginatedMoviesByCategory(categoryId);
 }
 
 function movieDetailsPage() {
@@ -134,6 +149,8 @@ function searchPage() {
     query_final = query.replaceAll('%20', ' '); //para quitar los espacios
     console.log(query_final);
     getMoviesBySearch(query_final);
+
+    infiniteScroll = getPaginatedMoviesBySeach(query);
 }
 
 function trendsPage() {
@@ -155,5 +172,7 @@ function trendsPage() {
 
     headerCategoryTitle.innerHTML = 'Tendencias'; 
     getTrendingMovies();
+
+    infiniteScroll = getPaginatedTrendingMovies;
 }
 
